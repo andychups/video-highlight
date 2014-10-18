@@ -1,11 +1,13 @@
 $.fn.videoHighlight = function (options) {
+    options = $.extend({
+        'timeUpdate': 300,
+        'debug': false
+    }, options);
+
     var plugin = {};
     var CANVAS_WIDTH = 1;
     var CANVAS_HEIGHT = 1;
-
-    options = $.extend({
-        'timeUpdate': 300
-    }, options);
+    var DEBUG = options.debug;
 
     plugin.$video = this;
     plugin.video = this[0];
@@ -13,6 +15,19 @@ $.fn.videoHighlight = function (options) {
     plugin.canvas = plugin.$canvas[0];
     plugin.ctx = plugin.canvas.getContext('2d');
     plugin.getColorPoll = null;
+
+    plugin.log = function () {
+        var args;
+
+        if (!DEBUG) {
+            return;
+        }
+
+        args = Array.prototype.slice.call(arguments);
+        args.unshift('videoHighlight >');
+
+        console.log.apply(console, args);
+    };
 
     plugin.getMiddleColor = function () {
         var frameData;
@@ -29,7 +44,9 @@ $.fn.videoHighlight = function (options) {
     };
 
     plugin.addEventListeners = function () {
-        plugin.$video.on('play', function () {
+        plugin.log('addEventListeners');
+        plugin.$video.one('timeupdate', function () {
+            plugin.log('fire event "timeupdate" once');
             plugin.getMiddleColor();
             plugin.getColorPoll = setInterval(function () {
                 plugin.getMiddleColor();
@@ -40,6 +57,7 @@ $.fn.videoHighlight = function (options) {
     plugin.init = function () {
         plugin.canvas.width = CANVAS_WIDTH;
         plugin.canvas.height = CANVAS_HEIGHT;
+        plugin.log('init:', CANVAS_WIDTH, CANVAS_HEIGHT);
         plugin.addEventListeners();
     };
 
