@@ -43,7 +43,7 @@ $('#kill-video-2').on('click', function () {
     var api = $video2.data('videohl-api');
     api.getTimeUpdate(); // 300
     api.setTimeUpdate(1000);
-    api.getTimeUpdate(); // 100
+    api.getTimeUpdate(); // 1000
     api.destroy(); // See you later, alligator    
 });
 
