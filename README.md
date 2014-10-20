@@ -9,6 +9,8 @@ http://andychups.ru/examples/fitandhighlight/
 How to use
 =========
 ```
+<h1 id="color-title">Color title</h1>
+
 <video id="js-video-1" class="js-video" data-videohl-timeupdate="500" width="1280" height="720" preload="auto" loop="loop">
     <source src="video/video1.webm" type="video/webm" />
     <source src="video/video1.mp4" type="video/mp4" />
