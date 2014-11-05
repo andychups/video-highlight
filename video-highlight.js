@@ -8,9 +8,6 @@ $.fn.videoHighlight = function () {
      * @constructor
      */
     function Plugin (options) {
-        this.CANVAS_WIDTH = 1;
-        this.CANVAS_HEIGHT = 1;
-
         this.$video = options.$video;
         this.video = this.$video[0];
         this.$canvas = $('<canvas></canvas>');
@@ -19,8 +16,8 @@ $.fn.videoHighlight = function () {
         this.getColorPoll = null;
         this.timeUpdate = options.timeUpdate || 300;
 
-        this.canvas.width = this.CANVAS_WIDTH;
-        this.canvas.height = this.CANVAS_HEIGHT;
+        this.canvas.width = CANVAS_WIDTH;
+        this.canvas.height = CANVAS_HEIGHT;
         this._addEventListeners();
     }
 
