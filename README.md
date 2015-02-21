@@ -1,10 +1,11 @@
-Video highlight (beta)
+Video highlight
 =========
 jQuery plugin which recognize the dominant color of video.
 
 Example
 =========
 Single color: http://andychups.ru/examples/fitandhighlight/
+
 Several colors: http://andychups.ru/examples/fitandhighlight-gradient/
 
 How to use
