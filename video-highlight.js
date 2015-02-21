@@ -1,10 +1,8 @@
 $.fn.videoHighlight = function () {
-    var CANVAS_WIDTH = 1;
-    var CANVAS_HEIGHT = 1;
-
     /**
      * @param {Object} options
      * @param {Object} options.$video – jQuery object with video tag
+     * @param {Boolean} [options.gradient = false] – Generate colors for gradient
      * @constructor
      */
     function Plugin (options) {
@@ -12,12 +10,13 @@ $.fn.videoHighlight = function () {
         this.video = this.$video[0];
         this.$canvas = $('<canvas></canvas>');
         this.canvas = this.$canvas[0];
+        this.isGradient = Boolean(options.gradient) || false;
         this.ctx = this.canvas.getContext('2d');
         this.getColorPoll = null;
-        this.timeUpdate = options.timeUpdate || 300;
+        this.timeUpdate = Number(options.timeUpdate) || 300;
 
-        this.canvas.width = CANVAS_WIDTH;
-        this.canvas.height = CANVAS_HEIGHT;
+        this.canvas.width = 1;
+        this.canvas.height = this.isGradient ? 2 : 1;
         this._addEventListeners();
     }
 
@@ -32,8 +31,31 @@ $.fn.videoHighlight = function () {
             this.getColorPoll = null;
         }
 
-        this.ctx.drawImage(this.video, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        return this.ctx.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT).data;
+        this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+        return this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
+    };
+
+    /**
+     * @private
+     * Return single color
+     * @return {Array} – [R,G,B]
+     */
+    Plugin.prototype._getSingleMiddleColor = function () {
+        var middleColor = this._getMiddleColor();
+        return [ middleColor[0], middleColor[1], middleColor[2] ];
+    };
+
+    /**
+     * @private
+     * Return several colors
+     * @return {Array} – [[R,G,B], [R,G,B]]
+     */
+    Plugin.prototype._getSeveralMiddleColor = function () {
+        var middleColor = this._getMiddleColor();
+        return [
+            [ middleColor[0], middleColor[1], middleColor[2] ],
+            [ middleColor[4], middleColor[5], middleColor[6] ]
+        ];
     };
 
     /**
@@ -54,8 +76,9 @@ $.fn.videoHighlight = function () {
      * Trigger event with color data
      */
     Plugin.prototype._publishColorData = function () {
-        var frameData = this._getMiddleColor();
-        this.$video.trigger('videohl-update', [frameData[0], frameData[1], frameData[2]])
+        var frameData = (this.isGradient) ? this._getSeveralMiddleColor() : this._getSingleMiddleColor();
+
+        this.$video.trigger('videohl-update', frameData);
     };
 
     /**
@@ -101,6 +124,7 @@ $.fn.videoHighlight = function () {
         this.canvas = null;
         this.$video.removeData('videohl-api');
         this.$video.removeData('videohl-timeupdate');
+        this.$video.removeData('videohl-gradient');
     };
 
     this.each(function () {
@@ -109,7 +133,8 @@ $.fn.videoHighlight = function () {
 
         pluginApi = new Plugin({
             '$video': $video,
-            'timeUpdate': $video.data('videohl-timeupdate')
+            'timeUpdate': $video.data('videohl-timeupdate'),
+            'gradient': $video.data('videohl-gradient')
         });
 
         $video.data('videohl-api', pluginApi);

@@ -11,7 +11,7 @@ How to use
 ```
 <h1 id="color-title">Color title</h1>
 
-<video id="js-video-1" class="js-video" data-videohl-timeupdate="500" width="1280" height="720" preload="auto" loop="loop">
+<video id="js-video-1" class="js-video" data-videohl-timeupdate="50" data-videohl-gradient="true" width="1280" height="720" preload="auto" loop="loop">
     <source src="video/video1.webm" type="video/webm" />
     <source src="video/video1.mp4" type="video/mp4" />
 </video>
@@ -32,8 +32,17 @@ var $video2 = $('#js-video-2');
 $videos.videoHighlight();
 
 $video1
-    .on('videohl-update', function (e, r, g, b) {
-        $('#color-title').css('color', 'rgb('+r+', '+g+', '+b+')');
+    .on('videohl-update', function (e, from, to) {
+        var pattern = 'linear-gradient(to bottom,  rgba(fromR,fromG,fromB,1) 0%, rgba(toR,toG,toB,1) 100%)';
+
+        pattern = pattern.replace('fromR', from[0]);
+        pattern = pattern.replace('fromG', from[1]);
+        pattern = pattern.replace('fromB', from[2]);
+        pattern = pattern.replace('toR', to[0]);
+        pattern = pattern.replace('toG', to[1]);
+        pattern = pattern.replace('toB', to[2]);
+
+        $('#color-title').css('background', pattern);
     });
 
 $video2
@@ -46,7 +55,7 @@ $('#kill-video-2').on('click', function () {
     api.getTimeUpdate(); // 300
     api.setTimeUpdate(1000);
     api.getTimeUpdate(); // 1000
-    api.destroy(); // See you later, alligator    
+    api.destroy(); // See you later, alligator
 });
 
 ```
