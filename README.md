@@ -4,7 +4,8 @@ jQuery plugin which recognize the dominant color of video.
 
 Example
 =========
-http://andychups.ru/examples/fitandhighlight/
+Single color: http://andychups.ru/examples/fitandhighlight/
+Several colors: http://andychups.ru/examples/fitandhighlight-gradient/
 
 How to use
 =========
