@@ -62,7 +62,7 @@ $('#kill-video-2').on('click', function () {
 
 ```
 
-API (see code)
+API
 =========
 api.getTimeUpdate()
 
